@@ -28,7 +28,18 @@ class _DetailPageState extends State<DetailPage> {
       body: Padding(
         padding: const EdgeInsets.all(15),
         child: ListView(
-          children: [Text(_v1), Text(_v2), Image.network(_v3), Text(_v4)],
+          children: [
+            Text(
+              _v1,
+              style: TextStyle(fontSize: 30),
+            ),
+            Text(
+              _v2,
+              style: TextStyle(fontSize: 25, color: Colors.grey),
+            ),
+            Image.network(_v3),
+            Text(_v4)
+          ],
         ),
       ),
     );

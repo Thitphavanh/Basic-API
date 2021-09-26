@@ -1,7 +1,8 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:layout/pages/detail.dart';
+import 'package:http/http.dart' as http;
+import 'dart:async';
 
 class HomePage extends StatefulWidget {
   // const HomePage({ Key? key }) : super(key: key);
@@ -18,21 +19,20 @@ class _HomePageState extends State<HomePage> {
           title: Text("Phenomenal Knowledge"),
         ),
         body: Padding(
-            padding: EdgeInsets.all(20),
+            padding: EdgeInsets.all(10),
             child: FutureBuilder(
-              builder: (context, snapshot) {
-                var data = json.decode(snapshot.data
-                    .toString()); // [{ເຈາະລຶກກ່ຽວກັບປັນຍາປະດິດ!}...{}{}{}]
+              builder: (context, AsyncSnapshot snapshot) {
+                // var data = json.decode(snapshot.data.toString()); // [{ເຈາະລຶກກ່ຽວກັບປັນຍາປະດິດ!}...{}{}{}]
                 return ListView.builder(
                   itemBuilder: (BuildContext context, int index) {
-                    return MyBox(data[index]['title'], data[index]['subtitle'],
-                        data[index]['image_url'], data[index]['detail']);
+                    return MyBox(snapshot.data[index]['title'], snapshot.data[index]['subtitle'],
+                        snapshot.data[index]['image_url'], snapshot.data[index]['detail']);
                   },
-                  itemCount: data.length,
+                  itemCount: snapshot.data.length,
                 );
               },
-              future:
-                  DefaultAssetBundle.of(context).loadString('assets/data.json'),
+              future: getData(),
+                  
             )));
   }
 
@@ -43,10 +43,10 @@ class _HomePageState extends State<HomePage> {
     v3 = image_url;
     v4 = detail;
     return Container(
-      margin: EdgeInsets.only(top: 20),
-      padding: EdgeInsets.all(15),
+      margin: EdgeInsets.only(top: 10),
+      padding: EdgeInsets.all(10),
       // color: Colors.blueAccent,
-      height: 150,
+      height: 250,
       decoration: BoxDecoration(
           // color: Colors.blueAccent,
           borderRadius: BorderRadius.circular(20),
@@ -82,4 +82,13 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+}
+
+
+Future getData() async {
+  // https://raw.githubusercontent.com/Thitphavanh/BasicAPI/main/data.json
+  var url = Uri.https('raw.githubusercontent.com','/Thitphavanh/BasicAPI/main/data.json');
+  var response = await http.get(url);
+  var result = json.decode(response.body);
+  return result;
 }
